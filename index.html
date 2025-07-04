@@ -391,14 +391,16 @@ var beatenUsers = function(){
     }
     pushMatrix();
     translate(scrollLength, 0);
-    for (var i= 0; i<ceil(myWinners.length/10); i++){
-        for(var j = 0; j<10; j++){
-            fill(0);
-            if(myWinners[index]){
-                text(myWinners[index][0]+" (" +myWinners[index][1]+")", i*250+150, j*36+40);
+    if(myWinner.length>0){
+        for (var i= 0; i<ceil(myWinners.length/10); i++){
+            for(var j = 0; j<10; j++){
+                fill(0);
+                if(myWinners[index]){
+                    text(myWinners[index][0]+" (" +myWinners[index][1]+")", i*250+150, j*36+40);
+                }
+                index += 1;
             }
-            index += 1;
-        }
+        }  
     }
     popMatrix();
     
