@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html> 
   <head>
-    <meta charset="utf-8">
     <title>Button Clicker</title> 
   </head>
   <body>
 	<!--This draws the canvas on the webpage -->
     <canvas id="mycanvas"></canvas> 
+
+    <form id="scoreForm">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="number" name="score" placeholder="Your Score" required />
+        <button type="submit">Submit</button>
+    </form>
   </body>
  
   <!-- Include the processing.js library -->
@@ -470,5 +475,42 @@ var draw = function() {
   // Pass the function to ProcessingJS constructor
   var processingInstance = new Processing(canvas, programCode); 
   </script>
-</html>
+  <script>
+    const API_URL = 'https://sheetdb.io/api/v1/uj1f8zyxi3jai';
+    const form = document.getElementById('scoreForm');
+    const tableBody = document.getElementById('scoreTable');
 
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        name: form.name.value.trim(),
+        score: parseInt(form.score.value.trim(), 10)
+      };
+
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data })
+      });
+
+      form.reset();
+    });
+
+    async function loadScores() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+
+      // Sort by score descending
+      data.sort((a, b) => parseInt(b.score) - parseInt(a.score));
+
+      tableBody.innerHTML = data.map(row => `
+        <tr>
+          <td>${row.name}</td>
+          <td>${row.score}</td>
+        </tr>
+      `).join('');
+    }
+
+    loadScores();
+  </script>
+</html>
